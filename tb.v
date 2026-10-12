@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 10/12/2026 10:42:25 AM
+// Create Date: 10/12/2026 10:24:57 AM
 // Design Name: 
 // Module Name: tb
 // Project Name: 
@@ -20,28 +20,28 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module tb(
+module tb();
 
+    reg  [3:0] req;
+    wire [3:0] grant;
+
+    prior_arb dut (
+        .req(req),
+        .grant(grant)
     );
-     reg clk, d;
-    wire q;
-    sync_pipe dut (.clk(clk), .d(d), .q(q));
-
-    initial clk = 0;
-    always #5 clk = ~clk;
 
     integer i;
-    reg [11:0] pattern;
+
     initial begin
-        pattern = 12'b0011_0101_1100;
-        d = 0;
+        req = 4'b0000;
+        #10;
+
         for (i = 0; i < 16; i = i + 1) begin
-            @(negedge clk);
-            d = (i < 12) ? pattern[11 - i] : 1'b0;
-            @(posedge clk);
-            #80
-            #1 $display("edge=%0d  d=%b  q=%b", i, d, q);
+            req = i;
+            #10;
+            $display("req=%b  grant=%b", req, grant);
         end
+
         $finish;
     end
 endmodule
